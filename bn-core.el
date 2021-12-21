@@ -7,7 +7,7 @@
 ;; Version: 0.0.1
 ;; Homepage: https://github.com/md-arif-shaikh/bn
 ;; URL: https://github.com/md-arif-shaikh/bn
-;; Package-Requires: ((emacs "24.1")) 
+;; Package-Requires: ((emacs "24.1"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -57,8 +57,8 @@
 
 (defun bn-core-convert-number (number)
   "Translate a NUMBER to Bangla.
-  Remember that in the process any preceding zeros are lost.
-  This is due to the fact that the 'number-to-string remove preceding zeros."
+Remember that in the process any preceding zeros are lost.
+This is due to the fact that the 'number-to-string remove preceding zeros."
   (let* ((numberstring (if (numberp number)
 			   (number-to-string number)
 			 number))
