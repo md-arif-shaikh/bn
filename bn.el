@@ -86,5 +86,71 @@
 		      'help-echo "ব্যাটারী অবস্থা সম্পর্কিত তথ্য")))
   (force-mode-line-update))
 
+(defcustom bn-major-names '((help-mode "হেল্প")
+			    (org-mode "অর্গ")
+			    (org-agenda-mode "অর্গ-এজেন্ডা")
+			    (magit-status-mode "ম্যাগিট-স্ট্যাটাস")
+			    (dired-mode "ডায়ার্ড")
+			    (lisp-interaction-mode "লিস্প ইন্টারএক্শন")
+			    (emacs-lisp-mode "ইমাক্স-লিস্প")
+			    (python-mode "পাইথন")
+			    (shell-mode "শেল")
+			    (eshell-mode "ইশেল")
+			    (text-mode "টেক্স্ট")
+			    (latex-mode "লেটেক্স")
+			    (pdf-view-mode "পিডিএফ")
+			    (message-mode "মেসেজ"))
+ "Major mode names to show 'major-mode' name in Bangla."
+ :type 'cons
+ :group 'bn)
+
+(defcustom bn-minor-names '((auto-revert-mode " অটো-রিভার্ট ")
+			    (company-search-mode " কোম্পানি-সার্চ ")
+			    (company-mode " কোম্পানি ")
+			    (global-company-mode " গ্লোবাল-কোম্পানি ")
+			    (yas-minor-mode " ইয়াস ")
+			    (which-key-mode " হুইচ-কী ")
+			    (ivy-mode " আইভি ")
+			    (flycheck-mode " ফ্লাইচেক ")
+			    (autopair-mode " অটো-পেয়ার ")
+			    (eldoc-mode " এল-ডক ")
+			    (diff-minor-mode " ডিফ ")
+			    (visual-line-mode " ভিজুয়াল-লাইন ")
+			    (all-the-icons-dired-mode  " অল-দ্য-আইকনস্-ডায়ার্ড ")
+			    (dired-omit-mode (:eval (if ... " অমিট" ""))))
+  "Minor mode names to show 'minor-mode' name in Bangla."
+  :type 'cons
+  :group 'bn)
+
+(defun bn-set-major-mode-name ()
+  "Set 'major-mode' name to Bangla using the BN-MAJOR-NAMES."
+  (let ((bn-major-name (cdr (assq major-mode bn-major-names))))
+    (when bn-major-name
+      (setq mode-name bn-major-name))))
+
+(defun bn-set-minor-mode-names ()
+  "Set 'minor-mode' names to Bangla using bn-minor-names."
+  (dolist (bn-minor bn-minor-names)
+    (assoc-delete-all (car bn-minor) minor-mode-alist)
+    (add-to-list 'minor-mode-alist bn-minor))
+  )
+
+(defun bn-appt-mode-line (min-to-app &optional abbrev)
+  "Return an appointment string suitable for use in the mode-line.
+MIN-TO-APP is a list of minutes, as strings.  If ABBREV is non-nil, abbreviates some text."
+  ;; All this silliness is just to make the formatting slightly nicer.
+  (let* ((multiple (> (length min-to-app) 1))
+	 (imin (if (or (not multiple)
+		       (not (delete (car min-to-app) min-to-app)))
+		   (car min-to-app))))
+    (format "%s%s %s"
+	    (if abbrev "এপয়েন্টমেন্ট" "এপয়েন্টমেন্ট")
+	    (if multiple "স" "")
+	    (if (equal imin "0") "এখন "
+	      (format "%s %s"
+		      (or (number-to-bn imin) (mapconcat #'identity (mapcar #'number-to-bn min-to-app) ","))
+		      (if abbrev "মিনিটে "
+			(format "মিনিটে " (if (equal imin "1") "" ""))))))))
+
 (provide 'bn)
 ;;; bn.el ends here
