@@ -7,7 +7,7 @@
 ;; Version: 0.0.1
 ;; Homepage: https://github.com/md-arif-shaikh/bn
 ;; URL: https://github.com/md-arif-shaikh/bn
-;; Package-Requires: ((emacs "24.1"))
+;; Package-Requires: ((emacs "26.2"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -132,8 +132,7 @@
   "Set 'minor-mode' names to Bangla using bn-minor-names."
   (dolist (bn-minor bn-minor-names)
     (assoc-delete-all (car bn-minor) minor-mode-alist)
-    (add-to-list 'minor-mode-alist bn-minor))
-  )
+    (add-to-list 'minor-mode-alist bn-minor)))
 
 (defun bn-appt-mode-line (min-to-app &optional abbrev)
   "Return an appointment string suitable for use in the mode-line.
@@ -148,7 +147,7 @@ MIN-TO-APP is a list of minutes, as strings.  If ABBREV is non-nil, abbreviates 
 	    (if multiple "স" "")
 	    (if (equal imin "0") "এখন "
 	      (format "%s %s"
-		      (or (number-to-bn imin) (mapconcat #'identity (mapcar #'number-to-bn min-to-app) ","))
+		      (or (bn-core-convert-number imin) (mapconcat #'identity (mapcar #'bn-core-convert-number min-to-app) ","))
 		      (if abbrev "মিনিটে "
 			(format "মিনিটে " (if (equal imin "1") "" ""))))))))
 
