@@ -153,9 +153,12 @@ MIN-TO-APP is a list of minutes, as strings.  If ABBREV is non-nil, abbreviates 
 
 (defun bn-vc-git-mode-line-string (x)
   "Display vc-git-mode-line-string that is X in Bangla."
-    (cond ((string-equal x "master") "গিট্ মাস্টার")
-	  ((string-equal x "main") "গিট্ মেন")
-	  (t x)))
+  (let ((current-branch (substring x 4))
+	(status (substring x 3 4)))
+    (setq current-branch (cond ((string-equal current-branch "master") "মাস্টার")
+			       ((string-equal current-branch "main") "মেন")
+			       (t current-branch)))
+    (concat "গিট্" status current-branch)))
 
 (provide 'bn)
 ;;; bn.el ends here
