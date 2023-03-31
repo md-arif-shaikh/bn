@@ -108,7 +108,15 @@ want to use to display on the modeline."
 
 (defun bn--get-second-clock-time-string ()
   "Get the time string for second clock."
-  (bn-core-convert-number (tzc--get-converted-time-string (format-time-string "%R" (current-time)) nil (car bn-second-clock-time-zone))))
+  (let* ((time-list (tzc--get-converted-time (format-time-string "%R" (current-time)) nil (car bn-second-clock-time-zone)))
+	 (min (nth 0 time-list))
+	 (hour (nth 1 time-list))
+	 (day-change (nth 2 time-list)))
+    (format "%s:%s%s"
+	    (bn-core-convert-number hour)
+	    (bn-core-convert-number min)
+	    (unless (equal day-change 0)
+	      (concat " " (bn-core-convert-number day-change) " দিন")))))
 
 (defcustom bn-display-time-string-forms
   '(;; add dayname
