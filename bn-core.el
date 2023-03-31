@@ -39,7 +39,8 @@
 		       ("8" . "৮")
 		       ("9" . "৯")
 		       ("." . ".")
-		       ("%" . "%")))
+		       ("%" . "%")
+		       (":" . ":")))
 
 (defun bn-core-convert-digit (digit)
   "Translate DIGIT to Bangla."

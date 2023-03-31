@@ -29,6 +29,7 @@
 ;;; Code:
 (require 'bn-core)
 (require 'battery)
+(require 'tzc)
 
 (defun bn-add-preceding-zero-to-date-time (bn-date-or-time)
   "Add a preceding zero to BN-DATE-OR-TIME."
@@ -51,8 +52,36 @@
   :type 'boolean
   :group 'bn)
 
+(defcustom  bn-add-dayname-in-display-time-string? t
+  "Add the dayname to date or time string in modeline."
+  :type 'boolean
+  :group 'bn)
+
+(defcustom  bn-add-zoneinfo-in-display-time-string? t
+  "Add the zoneinfo to date or time string in modeline."
+  :type 'boolean
+  :group 'bn)
+
+(defcustom bn-add-second-clock-in-display-time-string? t
+  "Add a second clock to the display time string."
+  :type 'boolean
+  :group 'bn)
+
+(defcustom bn-second-clock-time-zone '("Asia/Kolkata" . "কোলকাতা")
+  "Add a second clock to the display time string.
+The car is the time-zone name in Area/city format and the cdr is a label we
+want to use to display on the modeline."
+  :type 'alist
+  :group 'bn)
+
+(defun bn--get-second-clock-time-string ()
+  "Get the time string for second clock."
+  (bn-core-convert-number (tzc--get-converted-time-string (format-time-string "%R" (current-time)) nil (car bn-second-clock-time-zone))))
+
 (defcustom bn-display-time-string-forms
-  '((if bn-add-preceding-zero-to-date-time?
+  '((when bn-add-dayname-in-display-time-string?
+      (concat (bn-core-convert-day-name dayname) " "))
+    (if bn-add-preceding-zero-to-date-time?
 	(bn-add-preceding-zero-to-date-time (bn-core-convert-number day))
       (bn-core-convert-number day))
     bn-date-separator
@@ -62,7 +91,12 @@
     " "
     (bn-core-convert-number 24-hours)
     bn-time-separator
-    (bn-add-preceding-zero-to-date-time (bn-core-convert-number minutes)))
+    (bn-add-preceding-zero-to-date-time (bn-core-convert-number minutes))
+    (when bn-add-zoneinfo-in-display-time-string?
+      (concat " "
+	      time-zone))
+    (when bn-add-second-clock-in-display-time-string?
+      (concat " " (bn--get-second-clock-time-string) " " (cdr bn-second-clock-time-zone))))
   "Display time string in modeline in Bangla."
   :type 'list
   :group 'bn)
