@@ -7,7 +7,7 @@
 ;; Version: 0.0.1
 ;; Homepage: https://github.com/md-arif-shaikh/bn
 ;; URL: https://github.com/md-arif-shaikh/bn
-;; Package-Requires: ((emacs "26.2"))
+;; Package-Requires: ((emacs "26.2") (tzc "0.0.1"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -74,29 +74,73 @@ want to use to display on the modeline."
   :type 'alist
   :group 'bn)
 
+(defface bn-face-first-clock
+  `((t :foreground "#98C379"
+       :weight extra-bold
+       :box nil
+       :underline nil))
+  "Face for first clock."
+  :group 'bn-face)
+
+(defface bn-face-second-clock
+  `((t :foreground "#56B6C2"
+       :weight extra-bold
+       :box nil
+       :underline nil))
+  "Face for second clock."
+  :group 'bn-face)
+
+(defface bn-face-date-string
+  `((t :foreground "#C678DD"
+       :weight extra-bold
+       :box nil
+       :underline nil))
+  "Face for date string."
+  :group 'bn-face)
+
+(defface bn-face-day-name
+  `((t :foreground "#E5C07B"
+       :weight extra-bold
+       :box nil
+       :underline nil))
+  "Face for day name."
+  :group 'bn-face)
+
 (defun bn--get-second-clock-time-string ()
   "Get the time string for second clock."
   (bn-core-convert-number (tzc--get-converted-time-string (format-time-string "%R" (current-time)) nil (car bn-second-clock-time-zone))))
 
 (defcustom bn-display-time-string-forms
-  '((when bn-add-dayname-in-display-time-string?
-      (concat (bn-core-convert-day-name dayname) " "))
-    (if bn-add-preceding-zero-to-date-time?
-	(bn-add-preceding-zero-to-date-time (bn-core-convert-number day))
-      (bn-core-convert-number day))
-    bn-date-separator
-    (bn-core-convert-month-name monthname)
-    bn-date-separator
-    (bn-core-convert-number (substring year -2))
+  '(;; add dayname
+    (when bn-add-dayname-in-display-time-string?
+      (propertize (concat (bn-core-convert-day-name dayname) " ") 'face 'bn-face-day-name))
+    ;; add date
+    (propertize
+     (concat
+      (if bn-add-preceding-zero-to-date-time?
+	  (bn-add-preceding-zero-to-date-time (bn-core-convert-number day))
+	(bn-core-convert-number day))
+      bn-date-separator
+      (bn-core-convert-month-name monthname)
+      bn-date-separator
+      (bn-core-convert-number (substring year -2)))
+     'face 'bn-face-date-string)
     " "
-    (bn-core-convert-number 24-hours)
-    bn-time-separator
-    (bn-add-preceding-zero-to-date-time (bn-core-convert-number minutes))
+    ;; add time
+    (propertize
+     (concat (bn-core-convert-number 24-hours)
+	     bn-time-separator
+	     (bn-add-preceding-zero-to-date-time (bn-core-convert-number minutes))) 'face 'bn-face-first-clock)
+    ;; add zoneinfo
     (when bn-add-zoneinfo-in-display-time-string?
       (concat " "
-	      time-zone))
+	      (propertize time-zone 'face 'bn-face-first-clock)))
+    ;; add second clock
     (when bn-add-second-clock-in-display-time-string?
-      (concat " " (bn--get-second-clock-time-string) " " (cdr bn-second-clock-time-zone))))
+      (propertize
+       (concat " " (bn--get-second-clock-time-string)
+	       (when bn-add-zoneinfo-in-display-time-string?
+		 (concat " " (cdr bn-second-clock-time-zone)))) 'face 'bn-face-second-clock)))
   "Display time string in modeline in Bangla."
   :type 'list
   :group 'bn)
