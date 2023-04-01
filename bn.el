@@ -115,7 +115,8 @@ want to use to display on the modeline."
     (format "%s:%s%s"
 	    (bn-core-convert-number hour)
 	    (bn-core-convert-number min)
-	    (unless (equal day-change 0)
+	    (if (equal day-change 0)
+		""
 	      (concat " " (bn-core-convert-number day-change) " দিন")))))
 
 (defcustom bn-display-time-string-forms
