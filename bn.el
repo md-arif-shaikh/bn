@@ -114,7 +114,7 @@ want to use to display on the modeline."
 	 (day-change (nth 2 time-list)))
     (format "%s:%s%s"
 	    (bn-core-convert-number hour)
-	    (bn-core-convert-number min)
+	    (bn-add-preceding-zero-to-date-time (bn-core-convert-number min))
 	    (if (equal day-change 0)
 		""
 	      (concat " " (bn-core-convert-number day-change) " দিন")))))
