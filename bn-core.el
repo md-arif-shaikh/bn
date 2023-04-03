@@ -27,22 +27,22 @@
 
 ;;; Code:
 
-(defvar bn-core-digits)
-(setq bn-core-digits '(("0" . "০")
-		       ("1" . "১")
-		       ("2" . "২")
-		       ("3" . "৩")
-		       ("4" . "৪")
-		       ("5" . "৫")
-		       ("6" . "৬")
-		       ("7" . "৭")
-		       ("8" . "৮")
-		       ("9" . "৯")
-		       ("." . ".")
-		       ("%" . "%")
-		       (":" . ":")
-		       ("+" . "+")
-		       ("-" . "-")))
+(defvar bn-core-digits '(("0" . "০")
+			 ("1" . "১")
+			 ("2" . "২")
+			 ("3" . "৩")
+			 ("4" . "৪")
+			 ("5" . "৫")
+			 ("6" . "৬")
+			 ("7" . "৭")
+			 ("8" . "৮")
+			 ("9" . "৯")
+			 ("." . ".")
+			 ("%" . "%")
+			 (":" . ":")
+			 ("+" . "+")
+			 ("-" . "-"))
+  "Alist with each element of the form English-digit . Bangla-digit.")
 
 (defun bn-core-convert-digit (digit)
   "Translate DIGIT to Bangla."
@@ -60,7 +60,7 @@
 (defun bn-core-convert-number (number)
   "Translate a NUMBER to Bangla.
 Remember that in the process any preceding zeros are lost.
-This is due to the fact that the 'number-to-string remove preceding zeros."
+This is due to the fact that the `number-to-string` remove preceding zeros."
   (let* ((numberstring (if (numberp number)
 			   (number-to-string number)
 			 number))
