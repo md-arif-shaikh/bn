@@ -112,7 +112,7 @@ want to use to display on the modeline."
 	 (min (nth 0 time-list))
 	 (hour (nth 1 time-list))
 	 (day-change (nth 2 time-list)))
-    (format "%s:%s%s"
+    (format "🕓 %s:%s%s"
 	    (bn-core-convert-number hour)
 	    (bn-add-preceding-zero-to-date-time (bn-core-convert-number min))
 	    (if (equal day-change 0)
@@ -120,7 +120,8 @@ want to use to display on the modeline."
 	      (concat " " (bn-core-convert-number day-change) " দিন")))))
 
 (defcustom bn-display-time-string-forms
-  '(;; add dayname
+  '("🗓️ "
+    ;; add dayname
     (when bn-add-dayname-in-display-time-string?
       (propertize (concat (bn-core-convert-day-name dayname) " ") 'face 'bn-face-day-name))
     ;; add date
@@ -136,6 +137,7 @@ want to use to display on the modeline."
      'face 'bn-face-date-string)
     " "
     ;; add time
+    "🕐 "
     (propertize
      (concat (bn-core-convert-number 24-hours)
 	     bn-time-separator
